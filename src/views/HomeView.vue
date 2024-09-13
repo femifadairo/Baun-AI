@@ -72,7 +72,7 @@ const logoutUser = () => {
         </div>
         <div class="row justify-content-center">
           <div class="col-10">
-            <button @click="logoutUser" class="btn btn-warning">Logout</button>
+            <!--button @click="logoutUser" class="btn btn-warning">Logout</button-->
             <button type="submit" class="btn btn-warning">Proceed</button>
           </div>
         </div>
