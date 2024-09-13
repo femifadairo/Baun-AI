@@ -31,7 +31,7 @@
 
 <script>
 import axios from 'axios';
-
+import axiosInstance from "@/axios"
 export default {
   data() {
     return {
@@ -47,16 +47,14 @@ export default {
       this.errorMessage = '';
 
       try {
-        const response = await axios.post('auth/token/login', {
+        const response = await axiosInstance.post('auth/jwt/create/', {
           username: this.username,
           password: this.password,
         });
 
-        const token = response.data.auth_token;
-        // Save the token in localStorage (or any other storage method)
-        localStorage.setItem('auth_token', token);
-
-        // Redirect or perform further actions after successful login
+        
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
         this.$router.push('/');
       } catch (error) {
         this.errorMessage = 'Invalid username or password';

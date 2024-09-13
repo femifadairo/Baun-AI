@@ -12,9 +12,9 @@ export default {
 </script>
 
 <template>
-  <div class="col-12 my-2">
+  <!--div class="col-12 my-2">
     <h3 class="text-light text-center">AI Tutor</h3>
-  </div>
+  </div-->
   <div v-show="tutor.disable" class="col-lg-10 col-md-10 col-sm-10 col-xs-12 mx-3 my-2">
     <div class="row justify-content-end">
       <div class="col-8">
