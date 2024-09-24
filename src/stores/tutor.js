@@ -1,8 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import axiosInstance from '@/axios'
 export const useAITutorStore = defineStore('tutor', () => {
-  const count = ref(0)
+  const chatCcount = computed(() => chatLists.value.length)
+  const chatLists = ref([])
   const disable = ref(false)
     const prompt = ref('')
     const msg = ref('')
@@ -16,10 +17,31 @@ export const useAITutorStore = defineStore('tutor', () => {
            controller.abort();
            alert('chart aborted!!!')
            //response.value = ""
-
         }
-    }
-
+    };
+    const subject = JSON.parse(localStorage.getItem("aiData"));
+    const user = JSON.parse(localStorage.getItem("user"))
+    const getUserChat = async () =>{
+      try {
+        const res = await axiosInstance.get("ai/tutor/")
+        chatLists.value = res.data
+      } catch(e){
+        console.log(e)
+      }
+    };
+    const logUserChat = async () =>{
+      try {
+        const res = await axiosInstance.post("ai/tutor/", {
+          user: user.id,
+          subject: subject.subject,
+          prompt: prompt.value,
+          response: response.value
+        });
+      await getUserChat()
+      } catch(e){
+        console.log(e)
+      }
+    };
   const fetchData = async () => {
 disable.value = true
       response.value = ""
@@ -32,7 +54,7 @@ disable.value = true
       const signal = controller.signal;
   try {
 console.log(msg.value)
-    const res = await fetch('http://10.42.0.1:11434/api/chat',
+    const res = await fetch('http://localhost:11434/api/chat',
      {
       method: 'POST',
       headers: {
@@ -61,10 +83,13 @@ console.log(msg.value)
     while (true) {
       const { done, value } = await reader.read();
 	//console.log(value)
-      if (done) break;
+      if (done){
+        //console.log("completed")
+        break;
+      };
 
       const messages = new TextDecoder().decode(value);
-	console.log(messages)
+	//console.log(messages)
 	response.value += JSON.parse(messages).message.content;
     }
   } catch (error) {
@@ -73,6 +98,7 @@ console.log(msg.value)
         disable.value = false
 	msg.value.push({"role": "assistant", "content": response.value })
 	console.log(msg.value)
+  logUserChat();
    }
 };
 
@@ -107,5 +133,8 @@ return {
       copyOutput,
       copyQ,
         fetchData,
+        chatLists,
+        chatCcount,
+        getUserChat
 }
 })

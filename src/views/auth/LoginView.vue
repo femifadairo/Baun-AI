@@ -55,6 +55,7 @@ export default {
         
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
+        localStorage.setItem('user', response.data.user);
         this.$router.push('/');
       } catch (error) {
         this.errorMessage = 'Invalid username or password';

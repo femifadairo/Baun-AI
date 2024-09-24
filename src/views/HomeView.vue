@@ -3,6 +3,7 @@ import axiosInstance from "@/axios";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 const router = useRouter();
+const user = JSON.parse(localStorage.getItem("user"))
 const subjects = ref(["STEM", "Robotics", "IoT", "Coding", "AI"]);
 const entry = ref({ level: "", subject: "" });
 const grades = ["Grade 3 - 5", "Grade 6 - 8", "Grade 9 - 12"];
@@ -10,20 +11,10 @@ const saveInteract = () => {
   localStorage.setItem("aiData", JSON.stringify(entry.value));
   router.push("/ai/tutor");
 };
-
-const logoutUser = () => {
-  try {
-   const res = axiosInstance.post("auth/jwt/logout/")
-   console.log(res)
-    localStorage.clear();
-    router.push("/auth");
-  } catch (e) {
-    alert(`something went wrong!!! ${data.response.data.detail}`)
-  }
-};
 </script>
 <template>
   <div class="col-lg-6 text-light text-center">
+    <h1 class="my-4">Welcome, <span  class="text-warning text-capitalize">{{ user.username }}</span></h1>
     <h2 class="text-center">What would you like to learn today?</h2>
     ==================================================
     <form @submit.prevent="saveInteract">
@@ -72,7 +63,6 @@ const logoutUser = () => {
         </div>
         <div class="row justify-content-center">
           <div class="col-10">
-            <!--button @click="logoutUser" class="btn btn-warning">Logout</button-->
             <button type="submit" class="btn btn-warning">Proceed</button>
           </div>
         </div>
